@@ -9,13 +9,14 @@ if (isLoggedIn()) {
 }
 
 $error = '';
+$lang = getCurrentLanguage();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     
     if (empty($username) || empty($password)) {
-        $error = 'Vyplňte všechna pole';
+        $error = t('login.error.fill_all');
     } else {
         $result = loginUser($username, $password);
         
@@ -32,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $clientIp = getClientIp();
 ?>
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Přihlášení - Admin Dashboard</title>
+    <title><?php echo htmlspecialchars(t('login.title')); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -208,15 +209,15 @@ $clientIp = getClientIp();
     <div class="login-container">
         <div class="login-header">
             <i class="fas fa-shield-alt"></i>
-            <h1>Admin Dashboard</h1>
-            <p>Přihlášení</p>
+            <h1><?php echo htmlspecialchars(t('app.name')); ?></h1>
+            <p><?php echo htmlspecialchars(t('login.heading')); ?></p>
         </div>
         
         <div class="ip-warning">
             <i class="fas fa-exclamation-triangle"></i>
             <div>
-                Přistupujete z nepovolené IP adresy.<br>
-                Vyžaduje se přihlášení.
+                <?php echo htmlspecialchars(t('login.ip_warning_line1')); ?><br>
+                <?php echo htmlspecialchars(t('login.ip_warning_line2')); ?>
             </div>
         </div>
         
@@ -229,7 +230,7 @@ $clientIp = getClientIp();
         
         <form method="POST" action="">
             <div class="form-group">
-                <label for="username">Uživatelské jméno</label>
+                <label for="username"><?php echo htmlspecialchars(t('label.username')); ?></label>
                 <div class="input-icon">
                     <i class="fas fa-user"></i>
                     <input type="text" id="username" name="username" required autofocus 
@@ -238,7 +239,7 @@ $clientIp = getClientIp();
             </div>
             
             <div class="form-group">
-                <label for="password">Heslo</label>
+                <label for="password"><?php echo htmlspecialchars(t('label.password')); ?></label>
                 <div class="input-icon">
                     <i class="fas fa-lock"></i>
                     <input type="password" id="password" name="password" required>
@@ -247,16 +248,16 @@ $clientIp = getClientIp();
             
             <button type="submit" class="btn-login">
                 <i class="fas fa-sign-in-alt"></i>
-                Přihlásit se
+                <?php echo htmlspecialchars(t('login.button')); ?>
             </button>
         </form>
         
         <div class="ip-info">
-            Vaše IP adresa: <strong><?php echo htmlspecialchars($clientIp); ?></strong>
+            <?php echo htmlspecialchars(t('login.ip_label')); ?>: <strong><?php echo htmlspecialchars($clientIp); ?></strong>
         </div>
         
         <div class="login-footer">
-            <i class="fas fa-lock"></i> Zabezpečené připojení
+            <i class="fas fa-lock"></i> <?php echo htmlspecialchars(t('login.secured')); ?>
         </div>
     </div>
 </body>

@@ -4,6 +4,8 @@ require_once 'config.php';
 
 session_start();
 
+require_once 'i18n.php';
+
 // Kontrola IP adresy proti povoleným rozsahům (CIDR)
 function isIpAllowed($ip) {
     $pdo = getDbConnection();
@@ -104,15 +106,15 @@ function loginUser($username, $password) {
     $user = $stmt->fetch();
     
     if (!$user) {
-        return ['success' => false, 'error' => 'Neplatné přihlašovací údaje'];
+        return ['success' => false, 'error' => t('auth.invalid_credentials')];
     }
     
     if (!$user['is_active']) {
-        return ['success' => false, 'error' => 'Účet je deaktivován'];
+        return ['success' => false, 'error' => t('auth.account_disabled')];
     }
     
     if (!password_verify($password, $user['password_hash'])) {
-        return ['success' => false, 'error' => 'Neplatné přihlašovací údaje'];
+        return ['success' => false, 'error' => t('auth.invalid_credentials')];
     }
     
     // Úspěšné přihlášení

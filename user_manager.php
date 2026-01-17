@@ -5,6 +5,7 @@ checkAuth();
 $pdo = getDbConnection();
 $message = '';
 $messageType = '';
+$lang = getCurrentLanguage();
 
 // Zpracování akcí
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("SELECT id FROM dashboard_users WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
-            $message = 'Uživatelské jméno již existuje';
+            $message = t('user_manager.msg.username_exists');
             $messageType = 'error';
         } else {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("INSERT INTO dashboard_users (username, password_hash, email) VALUES (?, ?, ?)");
             $stmt->execute([$username, $passwordHash, $email]);
-            $message = 'Uživatel byl úspěšně přidán';
+            $message = t('user_manager.msg.user_added');
             $messageType = 'success';
         }
     } 
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $stmt = $pdo->prepare("UPDATE dashboard_users SET email = ? WHERE id = ?");
         $stmt->execute([$email, $id]);
-        $message = 'Uživatel byl aktualizován';
+        $message = t('user_manager.msg.user_updated');
         $messageType = 'success';
     }
     elseif ($action === 'change_password') {
@@ -46,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("UPDATE dashboard_users SET password_hash = ? WHERE id = ?");
             $stmt->execute([$passwordHash, $id]);
-            $message = 'Heslo bylo změněno';
+            $message = t('user_manager.msg.password_changed');
             $messageType = 'success';
         } else {
-            $message = 'Heslo musí mít alespoň 6 znaků';
+            $message = t('user_manager.msg.password_short');
             $messageType = 'error';
         }
     }
@@ -57,12 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = $_POST['id'];
         // Kontrola, aby se admin nemohl deaktivovat sám
         if ($id == $_SESSION['user_id']) {
-            $message = 'Nemůžete deaktivovat svůj vlastní účet';
+            $message = t('user_manager.msg.cannot_deactivate_self');
             $messageType = 'error';
         } else {
             $stmt = $pdo->prepare("UPDATE dashboard_users SET is_active = NOT is_active WHERE id = ?");
             $stmt->execute([$id]);
-            $message = 'Status uživatele byl změněn';
+            $message = t('user_manager.msg.status_changed');
             $messageType = 'success';
         }
     }
@@ -70,12 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = $_POST['id'];
         // Kontrola, aby se admin nemohl smazat sám
         if ($id == $_SESSION['user_id']) {
-            $message = 'Nemůžete smazat svůj vlastní účet';
+            $message = t('user_manager.msg.cannot_delete_self');
             $messageType = 'error';
         } else {
             $stmt = $pdo->prepare("DELETE FROM dashboard_users WHERE id = ?");
             $stmt->execute([$id]);
-            $message = 'Uživatel byl smazán';
+            $message = t('user_manager.msg.user_deleted');
             $messageType = 'success';
         }
     }
@@ -85,11 +86,11 @@ $users = $pdo->query("SELECT id, username, email, is_active, last_login, created
 $currentUserId = $_SESSION['user_id'];
 ?>
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Správa uživatelů</title>
+    <title><?php echo htmlspecialchars(t('user_manager.title')); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -254,9 +255,9 @@ $currentUserId = $_SESSION['user_id'];
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-users-cog"></i> Správa uživatelů</h1>
+            <h1><i class="fas fa-users-cog"></i> <?php echo htmlspecialchars(t('user_manager.title')); ?></h1>
             <a href="admin.php" class="btn btn-back">
-                <i class="fas fa-arrow-left"></i> Zpět na dashboard
+                <i class="fas fa-arrow-left"></i> <?php echo htmlspecialchars(t('nav.back_dashboard')); ?>
             </a>
         </header>
         
@@ -268,42 +269,42 @@ $currentUserId = $_SESSION['user_id'];
         <?php endif; ?>
         
         <div class="content-box">
-            <h2><i class="fas fa-user-plus"></i> Přidat nového uživatele</h2>
+            <h2><i class="fas fa-user-plus"></i> <?php echo htmlspecialchars(t('user_manager.add_title')); ?></h2>
             <form method="POST">
                 <input type="hidden" name="action" value="add">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="username">Uživatelské jméno *</label>
+                        <label for="username"><?php echo htmlspecialchars(t('user_manager.username_label')); ?></label>
                         <input type="text" id="username" name="username" required minlength="3">
                     </div>
                     <div class="form-group">
-                        <label for="email">E-mail</label>
+                        <label for="email"><?php echo htmlspecialchars(t('label.email')); ?></label>
                         <input type="email" id="email" name="email">
                     </div>
                     <div class="form-group">
-                        <label for="password">Heslo *</label>
+                        <label for="password"><?php echo htmlspecialchars(t('user_manager.password_label')); ?></label>
                         <input type="password" id="password" name="password" required minlength="6">
-                        <small style="color: #7f8c8d;">Minimálně 6 znaků</small>
+                        <small style="color: #7f8c8d;"><?php echo htmlspecialchars(t('user_manager.password_min')); ?></small>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Vytvořit uživatele
+                    <i class="fas fa-plus"></i> <?php echo htmlspecialchars(t('user_manager.create_user')); ?>
                 </button>
             </form>
         </div>
         
         <div class="content-box">
-            <h2><i class="fas fa-list"></i> Seznam uživatelů</h2>
+            <h2><i class="fas fa-list"></i> <?php echo htmlspecialchars(t('user_manager.list_title')); ?></h2>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Uživatel</th>
-                        <th>E-mail</th>
-                        <th>Status</th>
-                        <th>Poslední přihlášení</th>
-                        <th>Vytvořeno</th>
-                        <th>Akce</th>
+                        <th><?php echo htmlspecialchars(t('user_manager.user_label')); ?></th>
+                        <th><?php echo htmlspecialchars(t('label.email')); ?></th>
+                        <th><?php echo htmlspecialchars(t('label.status')); ?></th>
+                        <th><?php echo htmlspecialchars(t('user_manager.last_login')); ?></th>
+                        <th><?php echo htmlspecialchars(t('user_manager.created_at')); ?></th>
+                        <th><?php echo htmlspecialchars(t('label.actions')); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -313,18 +314,18 @@ $currentUserId = $_SESSION['user_id'];
                         <td>
                             <strong><?php echo htmlspecialchars($user['username']); ?></strong>
                             <?php if ($user['id'] == $currentUserId): ?>
-                                <span class="user-badge">Vy</span>
+                                <span class="user-badge"><?php echo htmlspecialchars(t('label.you')); ?></span>
                             <?php endif; ?>
                         </td>
                         <td><?php echo htmlspecialchars($user['email'] ?? '-'); ?></td>
                         <td>
                             <?php if ($user['is_active']): ?>
                                 <span class="status-active">
-                                    <i class="fas fa-check-circle"></i> Aktivní
+                                    <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars(t('label.active')); ?>
                                 </span>
                             <?php else: ?>
                                 <span class="status-inactive">
-                                    <i class="fas fa-times-circle"></i> Neaktivní
+                                    <i class="fas fa-times-circle"></i> <?php echo htmlspecialchars(t('label.inactive')); ?>
                                 </span>
                             <?php endif; ?>
                         </td>
@@ -346,24 +347,24 @@ $currentUserId = $_SESSION['user_id'];
                         </td>
                         <td>
                             <button class="btn btn-small btn-primary" onclick="openEditModal(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['email'], ENT_QUOTES); ?>')">
-                                <i class="fas fa-edit"></i> Upravit
+                                <i class="fas fa-edit"></i> <?php echo htmlspecialchars(t('user_manager.edit')); ?>
                             </button>
                             <button class="btn btn-small btn-warning" onclick="openPasswordModal(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['username'], ENT_QUOTES); ?>')">
-                                <i class="fas fa-key"></i> Heslo
+                                <i class="fas fa-key"></i> <?php echo htmlspecialchars(t('user_manager.password')); ?>
                             </button>
                             
                             <?php if ($user['id'] != $currentUserId): ?>
                                 <form method="POST" style="display: inline;">
                                     <input type="hidden" name="action" value="toggle">
                                     <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
-                                    <button type="submit" class="btn btn-small btn-success" title="Aktivovat/Deaktivovat">
+                                    <button type="submit" class="btn btn-small btn-success" title="<?php echo htmlspecialchars(t('user_manager.activate_deactivate')); ?>">
                                         <i class="fas fa-toggle-<?php echo $user['is_active'] ? 'on' : 'off'; ?>"></i>
                                     </button>
                                 </form>
-                                <form method="POST" style="display: inline;" onsubmit="return confirm('Opravdu smazat uživatele?');">
+                                <form method="POST" style="display: inline;" onsubmit="return confirm('<?php echo htmlspecialchars(t('user_manager.confirm_delete_user'), ENT_QUOTES); ?>');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
-                                    <button type="submit" class="btn btn-small btn-danger" title="Smazat">
+                                    <button type="submit" class="btn btn-small btn-danger" title="<?php echo htmlspecialchars(t('user_manager.delete')); ?>">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -380,16 +381,16 @@ $currentUserId = $_SESSION['user_id'];
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editModal')">&times;</span>
-            <h2><i class="fas fa-edit"></i> Upravit uživatele</h2>
+            <h2><i class="fas fa-edit"></i> <?php echo htmlspecialchars(t('user_manager.edit_modal_title')); ?></h2>
             <form method="POST">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" id="edit_id" name="id">
                 <div class="form-group">
-                    <label for="edit_email">E-mail</label>
+                    <label for="edit_email"><?php echo htmlspecialchars(t('label.email')); ?></label>
                     <input type="email" id="edit_email" name="email">
                 </div>
                 <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save"></i> Uložit změny
+                    <i class="fas fa-save"></i> <?php echo htmlspecialchars(t('user_manager.save_changes')); ?>
                 </button>
             </form>
         </div>
@@ -399,18 +400,18 @@ $currentUserId = $_SESSION['user_id'];
     <div id="passwordModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('passwordModal')">&times;</span>
-            <h2><i class="fas fa-key"></i> Změnit heslo</h2>
-            <p style="margin-bottom: 20px;">Uživatel: <strong id="password_username"></strong></p>
+            <h2><i class="fas fa-key"></i> <?php echo htmlspecialchars(t('user_manager.change_password_title')); ?></h2>
+            <p style="margin-bottom: 20px;"><?php echo htmlspecialchars(t('user_manager.user_label')); ?>: <strong id="password_username"></strong></p>
             <form method="POST">
                 <input type="hidden" name="action" value="change_password">
                 <input type="hidden" id="password_id" name="id">
                 <div class="form-group">
-                    <label for="new_password">Nové heslo</label>
+                    <label for="new_password"><?php echo htmlspecialchars(t('user_manager.new_password')); ?></label>
                     <input type="password" id="new_password" name="new_password" required minlength="6">
-                    <small style="color: #7f8c8d;">Minimálně 6 znaků</small>
+                    <small style="color: #7f8c8d;"><?php echo htmlspecialchars(t('user_manager.password_min')); ?></small>
                 </div>
                 <button type="submit" class="btn btn-warning">
-                    <i class="fas fa-save"></i> Změnit heslo
+                    <i class="fas fa-save"></i> <?php echo htmlspecialchars(t('user_manager.change_password')); ?>
                 </button>
             </form>
         </div>

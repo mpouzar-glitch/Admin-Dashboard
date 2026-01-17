@@ -7,13 +7,28 @@ require_once 'config.php';
 $settings = getSettings();
 
 $currentPageId = $_GET['page'] ?? 1;
+$lang = getCurrentLanguage();
+$jsTranslations = getJsTranslations([
+    'admin.select_page',
+    'label.current_suffix',
+    'admin.separator_label',
+    'admin.edit_move',
+    'admin.edit',
+    'label.page',
+    'admin.modal.add_title',
+    'admin.modal.edit_title',
+    'admin.button_moved',
+    'admin.settings_saved',
+    'admin.subpage_created',
+    'admin.confirm_delete_button',
+]);
 ?>
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Správa</title>
+    <title><?php echo htmlspecialchars(t('admin.title')); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
@@ -434,7 +449,7 @@ $currentPageId = $_GET['page'] ?? 1;
     <div class="container">
         <header>
             <div class="header-top">
-                <h1><i class="fas fa-tools"></i> Správa dashboardu</h1>
+                <h1><i class="fas fa-tools"></i> <?php echo htmlspecialchars(t('admin.header')); ?></h1>
                 <div class="header-actions">
                     <?php if ($currentUser): ?>
                         <span style="color: #2c3e50; padding: 12px; display: flex; align-items: center; gap: 8px;">
@@ -444,32 +459,32 @@ $currentPageId = $_GET['page'] ?? 1;
                     <?php endif; ?>
                     
                     <a href="user_manager.php" class="btn" style="background: #9b59b6; color: white;">
-                        <i class="fas fa-users-cog"></i> Uživatelé
+                        <i class="fas fa-users-cog"></i> <?php echo htmlspecialchars(t('nav.users')); ?>
                     </a>
                     
                     <a href="ip_manager.php" class="btn" style="background: #16a085; color: white;">
-                        <i class="fas fa-network-wired"></i> IP rozsahy
+                        <i class="fas fa-network-wired"></i> <?php echo htmlspecialchars(t('nav.ip_ranges')); ?>
                     </a>
                     
                     <button class="btn" style="background: #f39c12; color: white;" onclick="openPageModal()">
-                        <i class="fas fa-folder-plus"></i> Nová podstránka
+                        <i class="fas fa-folder-plus"></i> <?php echo htmlspecialchars(t('admin.new_subpage')); ?>
                     </button>
                     
                     <button class="btn btn-settings" onclick="openSettingsModal()">
-                        <i class="fas fa-sliders-h"></i> Vzhled
+                        <i class="fas fa-sliders-h"></i> <?php echo htmlspecialchars(t('admin.appearance')); ?>
                     </button>
                     
                     <button class="btn btn-primary" onclick="openAddModal()">
-                        <i class="fas fa-plus"></i> Přidat tlačítko
+                        <i class="fas fa-plus"></i> <?php echo htmlspecialchars(t('admin.add_button')); ?>
                     </button>
                     
                     <a href="index.php?page=<?php echo $currentPageId; ?>" class="btn btn-back">
-                        <i class="fas fa-eye"></i> Zobrazit
+                        <i class="fas fa-eye"></i> <?php echo htmlspecialchars(t('nav.view')); ?>
                     </a>
                     
                     <?php if (isLoggedIn()): ?>
                         <a href="logout.php" class="btn" style="background: #e74c3c; color: white;">
-                            <i class="fas fa-sign-out-alt"></i> Odhlásit
+                            <i class="fas fa-sign-out-alt"></i> <?php echo htmlspecialchars(t('nav.logout')); ?>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -488,54 +503,54 @@ $currentPageId = $_GET['page'] ?? 1;
     <div id="buttonModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('buttonModal')">&times;</span>
-            <h2 id="modalTitle">Přidat tlačítko</h2>
+            <h2 id="modalTitle"><?php echo htmlspecialchars(t('admin.modal.add_title')); ?></h2>
             <form id="buttonForm" onsubmit="saveButton(event)" novalidate>
                 <input type="hidden" id="buttonId" name="buttonId">
 
                 <div class="form-group">
-                    <label for="buttonType">Typ prvku *</label>
+                    <label for="buttonType"><?php echo htmlspecialchars(t('admin.button_type')); ?></label>
                     <select id="buttonType" name="buttonType">
-                        <option value="external_url">Externí odkaz (URL)</option>
-                        <option value="page_link">Odkaz na podstránku</option>
-                        <option value="separator">Oddělovač (prázdné místo)</option>
+                        <option value="external_url"><?php echo htmlspecialchars(t('admin.type.external')); ?></option>
+                        <option value="page_link"><?php echo htmlspecialchars(t('admin.type.page_link')); ?></option>
+                        <option value="separator"><?php echo htmlspecialchars(t('admin.type.separator')); ?></option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="buttonParentPage">Umístění na stránce *</label>
+                    <label for="buttonParentPage"><?php echo htmlspecialchars(t('admin.parent_page')); ?></label>
                     <select id="buttonParentPage" name="buttonParentPage">
-                        <option value="">-- Vyberte stránku --</option>
+                        <option value=""><?php echo htmlspecialchars(t('admin.select_page')); ?></option>
                     </select>
                     <small>
                         <i class="fas fa-info-circle"></i> 
-                        Vyberte, na které stránce se má tlačítko zobrazovat
+                        <?php echo htmlspecialchars(t('admin.select_page_help')); ?>
                     </small>
                 </div>
 
                 <div class="form-group" id="titleGroup">
-                    <label for="buttonTitle">Název *</label>
+                    <label for="buttonTitle"><?php echo htmlspecialchars(t('admin.title_label')); ?></label>
                     <input type="text" id="buttonTitle" name="buttonTitle">
                 </div>
 
                 <div class="form-group" id="urlGroup">
-                    <label for="buttonUrl">URL *</label>
+                    <label for="buttonUrl"><?php echo htmlspecialchars(t('admin.url_label')); ?></label>
                     <input type="url" id="buttonUrl" name="buttonUrl">
                 </div>
 
                 <div class="form-group" id="targetPageGroup" style="display: none;">
-                    <label for="buttonTargetPage">Cílová stránka *</label>
+                    <label for="buttonTargetPage"><?php echo htmlspecialchars(t('admin.target_page')); ?></label>
                     <select id="buttonTargetPage" name="buttonTargetPage">
-                        <option value="">-- Vyberte stránku --</option>
+                        <option value=""><?php echo htmlspecialchars(t('admin.select_page')); ?></option>
                     </select>
                 </div>
 
                 <div class="form-group" id="descGroup">
-                    <label for="buttonDescription">Popis</label>
+                    <label for="buttonDescription"><?php echo htmlspecialchars(t('admin.description')); ?></label>
                     <textarea id="buttonDescription" name="buttonDescription"></textarea>
                 </div>
 
                 <div class="form-group" id="bgColorGroup">
-                    <label for="buttonBgColor">Barva pozadí tlačítka</label>
+                    <label for="buttonBgColor"><?php echo htmlspecialchars(t('admin.bg_color')); ?></label>
                     <div class="color-picker-wrapper">
                         <input type="color" id="buttonBgColor" name="buttonBgColor" value="#ffffff">
                         <input type="text" id="buttonBgColorText" value="#ffffff" 
@@ -544,7 +559,7 @@ $currentPageId = $_GET['page'] ?? 1;
                 </div>
 
                 <div class="form-group" id="colorGroup">
-                    <label for="buttonColor">Barva ikony</label>
+                    <label for="buttonColor"><?php echo htmlspecialchars(t('admin.icon_color')); ?></label>
                     <div class="color-picker-wrapper">
                         <input type="color" id="buttonColor" name="buttonColor" value="#3498db">
                         <input type="text" id="buttonColorText" value="#3498db" 
@@ -553,7 +568,7 @@ $currentPageId = $_GET['page'] ?? 1;
                 </div>
 
                 <div class="form-group" id="iconGroup">
-                    <label for="buttonIcon">Ikona (FontAwesome)</label>
+                    <label for="buttonIcon"><?php echo htmlspecialchars(t('admin.icon_label')); ?></label>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <input type="text" id="buttonIcon" name="buttonIcon" placeholder="fa-link" 
                                oninput="updateIconPreview()">
@@ -561,12 +576,12 @@ $currentPageId = $_GET['page'] ?? 1;
                             <i class="fas fa-link"></i>
                         </span>
                     </div>
-                    <small>Např: fa-server, fa-shield-alt, fa-chart-line</small>
+                    <small><?php echo htmlspecialchars(t('admin.icon_help')); ?></small>
                 </div>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Uložit
+                        <i class="fas fa-save"></i> <?php echo htmlspecialchars(t('admin.save')); ?>
                     </button>
                 </div>
             </form>
@@ -577,35 +592,35 @@ $currentPageId = $_GET['page'] ?? 1;
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('settingsModal')">&times;</span>
-            <h2><i class="fas fa-sliders-h"></i> Nastavení vzhledu</h2>
+            <h2><i class="fas fa-sliders-h"></i> <?php echo htmlspecialchars(t('admin.settings_title')); ?></h2>
             <form id="settingsForm" onsubmit="saveSettings(event)" novalidate>
                 <div class="settings-grid">
                     <div class="form-group">
-                        <label for="buttonMinWidth">Minimální šířka (px)</label>
+                        <label for="buttonMinWidth"><?php echo htmlspecialchars(t('admin.min_width')); ?></label>
                         <input type="number" id="buttonMinWidth" name="buttonMinWidth" min="150" max="500" 
                                value="<?php echo $settings['button_min_width']; ?>">
                     </div>
 
                     <div class="form-group">
-                        <label for="buttonMinHeight">Minimální výška (px)</label>
+                        <label for="buttonMinHeight"><?php echo htmlspecialchars(t('admin.min_height')); ?></label>
                         <input type="number" id="buttonMinHeight" name="buttonMinHeight" min="100" max="400" 
                                value="<?php echo $settings['button_min_height']; ?>">
                     </div>
 
                     <div class="form-group">
-                        <label for="iconSize">Velikost ikony (em)</label>
+                        <label for="iconSize"><?php echo htmlspecialchars(t('admin.icon_size')); ?></label>
                         <input type="number" id="iconSize" name="iconSize" min="1" max="6" step="0.1" 
                                value="<?php echo $settings['icon_size']; ?>">
                     </div>
 
                     <div class="form-group">
-                        <label for="titleSize">Velikost názvu (em)</label>
+                        <label for="titleSize"><?php echo htmlspecialchars(t('admin.title_size')); ?></label>
                         <input type="number" id="titleSize" name="titleSize" min="0.8" max="2.5" step="0.1" 
                                value="<?php echo $settings['title_size']; ?>">
                     </div>
 
                     <div class="form-group">
-                        <label for="gridGap">Mezera mezi tlačítky (px)</label>
+                        <label for="gridGap"><?php echo htmlspecialchars(t('admin.grid_gap')); ?></label>
                         <input type="number" id="gridGap" name="gridGap" min="5" max="50" 
                                value="<?php echo $settings['grid_gap']; ?>">
                     </div>
@@ -613,7 +628,7 @@ $currentPageId = $_GET['page'] ?? 1;
 
                 <div class="form-group" style="margin-top: 20px;">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Uložit nastavení
+                        <i class="fas fa-save"></i> <?php echo htmlspecialchars(t('admin.save_settings')); ?>
                     </button>
                 </div>
             </form>
@@ -624,19 +639,19 @@ $currentPageId = $_GET['page'] ?? 1;
     <div id="pageModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('pageModal')">&times;</span>
-            <h2><i class="fas fa-folder-plus"></i> Vytvořit novou podstránku</h2>
+            <h2><i class="fas fa-folder-plus"></i> <?php echo htmlspecialchars(t('admin.new_page_title')); ?></h2>
             <div class="info-box">
-                <i class="fas fa-info-circle"></i> Podstránka bude vytvořena pod aktuální stránkou
+                <i class="fas fa-info-circle"></i> <?php echo htmlspecialchars(t('admin.new_page_info')); ?>
             </div>
             <form id="pageForm" onsubmit="savePage(event)" novalidate>
                 <div class="form-group">
-                    <label for="pageName">Název stránky *</label>
-                    <input type="text" id="pageName" name="pageName" placeholder="Např: Monitoring, Administrace...">
+                    <label for="pageName"><?php echo htmlspecialchars(t('admin.page_name')); ?></label>
+                    <input type="text" id="pageName" name="pageName" placeholder="<?php echo htmlspecialchars(t('admin.page_placeholder')); ?>">
                 </div>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Vytvořit stránku
+                        <i class="fas fa-save"></i> <?php echo htmlspecialchars(t('admin.create_page')); ?>
                     </button>
                 </div>
             </form>
@@ -649,6 +664,7 @@ $currentPageId = $_GET['page'] ?? 1;
         let buttons = [];
         let pages = [];
         const currentPageId = <?php echo $currentPageId; ?>;
+        const i18n = <?php echo json_encode($jsTranslations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
         
         // Load pages for dropdown
         function loadPages() {
@@ -665,7 +681,7 @@ $currentPageId = $_GET['page'] ?? 1;
             // Update target page dropdown (pro page_link typ)
             const targetPageSelect = document.getElementById('buttonTargetPage');
             if (targetPageSelect) {
-                targetPageSelect.innerHTML = '<option value="">-- Vyberte stránku --</option>';
+                targetPageSelect.innerHTML = `<option value="">${i18n['admin.select_page']}</option>`;
                 pages.forEach(page => {
                     const option = document.createElement('option');
                     option.value = page.id;
@@ -677,14 +693,14 @@ $currentPageId = $_GET['page'] ?? 1;
             // Update parent page dropdown (umístění tlačítka)
             const parentPageSelect = document.getElementById('buttonParentPage');
             if (parentPageSelect) {
-                parentPageSelect.innerHTML = '<option value="">-- Vyberte stránku --</option>';
+                parentPageSelect.innerHTML = `<option value="">${i18n['admin.select_page']}</option>`;
                 pages.forEach(page => {
                     const option = document.createElement('option');
                     option.value = page.id;
                     option.textContent = page.page_name;
                     // Označit aktuální stránku
                     if (page.id == currentPageId) {
-                        option.textContent += ' (aktuální)';
+                        option.textContent += ` ${i18n['label.current_suffix']}`;
                         option.selected = true;
                     }
                     parentPageSelect.appendChild(option);
@@ -751,10 +767,10 @@ $currentPageId = $_GET['page'] ?? 1;
                     card.style.backgroundColor = 'transparent';
                     card.innerHTML = `
                         <div style="color: #95a5a6; font-style: italic;">
-                            <i class="fas fa-minus"></i> Oddělovač
+                            <i class="fas fa-minus"></i> ${i18n['admin.separator_label']}
                         </div>
                         <div class="card-actions">
-                            <button class="btn btn-small btn-edit" onclick="event.stopPropagation(); openEditModal(${button.id})" title="Upravit / Přesunout">
+                            <button class="btn btn-small btn-edit" onclick="event.stopPropagation(); openEditModal(${button.id})" title="${i18n['admin.edit_move']}">
                                 <i class="fas fa-arrows-alt"></i>
                             </button>
                             <button class="btn btn-small btn-delete" onclick="event.stopPropagation(); deleteButton(${button.id})">
@@ -768,7 +784,7 @@ $currentPageId = $_GET['page'] ?? 1;
                     let badge = '';
                     if (button.button_type === 'page_link') {
                         card.classList.add('page-link');
-                        badge = '<span class="page-badge"><i class="fas fa-layer-group"></i> Stránka</span>';
+                        badge = `<span class="page-badge"><i class="fas fa-layer-group"></i> ${i18n['label.page']}</span>`;
                     }
                     
                     card.innerHTML = `
@@ -779,8 +795,8 @@ $currentPageId = $_GET['page'] ?? 1;
                             <div class="card-description">${button.description || ''}</div>
                         </div>
                         <div class="card-actions">
-                            <button class="btn btn-small btn-edit" onclick="event.stopPropagation(); openEditModal(${button.id})" title="Upravit / Přesunout">
-                                <i class="fas fa-edit"></i> Upravit
+                            <button class="btn btn-small btn-edit" onclick="event.stopPropagation(); openEditModal(${button.id})" title="${i18n['admin.edit_move']}">
+                                <i class="fas fa-edit"></i> ${i18n['admin.edit']}
                             </button>
                             <button class="btn btn-small btn-delete" onclick="event.stopPropagation(); deleteButton(${button.id})">
                                 <i class="fas fa-trash"></i>
@@ -834,7 +850,7 @@ $currentPageId = $_GET['page'] ?? 1;
         }
         
         function openAddModal() {
-            document.getElementById('modalTitle').textContent = 'Přidat tlačítko';
+            document.getElementById('modalTitle').textContent = i18n['admin.modal.add_title'];
             document.getElementById('buttonForm').reset();
             document.getElementById('buttonId').value = '';
             document.getElementById('buttonColor').value = '#3498db';
@@ -858,7 +874,7 @@ $currentPageId = $_GET['page'] ?? 1;
             const button = buttons.find(b => b.id == id);
             if (!button) return;
             
-            document.getElementById('modalTitle').textContent = 'Upravit tlačítko';
+            document.getElementById('modalTitle').textContent = i18n['admin.modal.edit_title'];
             document.getElementById('buttonId').value = button.id;
             document.getElementById('buttonTitle').value = button.title;
             document.getElementById('buttonUrl').value = button.url;
@@ -1006,7 +1022,7 @@ $currentPageId = $_GET['page'] ?? 1;
                     
                     // Pokud bylo tlačítko přesunuto na jinou stránku
                     if (selectedParentPage != currentPageId && id) {
-                        alert('Tlačítko bylo přesunuto na jinou stránku.');
+                        alert(i18n['admin.button_moved']);
                     }
                     
                     loadButtons();
@@ -1034,7 +1050,7 @@ $currentPageId = $_GET['page'] ?? 1;
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    alert('Nastavení uloženo. Stránka se nyní obnoví.');
+                    alert(i18n['admin.settings_saved']);
                     location.reload();
                 }
             })
@@ -1059,7 +1075,7 @@ $currentPageId = $_GET['page'] ?? 1;
                 if (result.success) {
                     closeModal('pageModal');
                     loadPages();
-                    alert('Podstránka byla vytvořena s ID: ' + result.id);
+                    alert(i18n['admin.subpage_created'] + result.id);
                     document.getElementById('pageForm').reset();
                 }
             })
@@ -1067,7 +1083,7 @@ $currentPageId = $_GET['page'] ?? 1;
         }
         
         function deleteButton(id) {
-            if (!confirm('Opravdu chcete smazat toto tlačítko?')) return;
+            if (!confirm(i18n['admin.confirm_delete_button'])) return;
             
             const formData = new FormData();
             formData.append('action', 'delete');
