@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $users = $pdo->query("SELECT id, username, email, is_active, last_login, created_at FROM dashboard_users ORDER BY id ASC")->fetchAll();
-$currentUserId = $_SESSION['user_id'];
+$currentUserId = $_SESSION['user_id'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($lang); ?>">
