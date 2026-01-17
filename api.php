@@ -1,6 +1,7 @@
 <?php
 // api.php
 require_once 'config.php';
+require_once 'i18n.php';
 
 header('Content-Type: application/json');
 
@@ -144,14 +145,14 @@ switch ($action) {
         $stmt = $pdo->prepare("SELECT COUNT(*) as cnt FROM dashboard_pages WHERE parent_page_id = ?");
         $stmt->execute([$id]);
         if ($stmt->fetch()['cnt'] > 0) {
-            echo json_encode(['success' => false, 'error' => 'Stránka obsahuje podstránky']);
+            echo json_encode(['success' => false, 'error' => t('api.page_has_children')]);
             break;
         }
         
         $stmt = $pdo->prepare("SELECT COUNT(*) as cnt FROM dashboard_buttons WHERE parent_page_id = ?");
         $stmt->execute([$id]);
         if ($stmt->fetch()['cnt'] > 0) {
-            echo json_encode(['success' => false, 'error' => 'Stránka obsahuje tlačítka']);
+            echo json_encode(['success' => false, 'error' => t('api.page_has_buttons')]);
             break;
         }
         
@@ -161,6 +162,6 @@ switch ($action) {
         break;
     
     default:
-        echo json_encode(['error' => 'Invalid action']);
+        echo json_encode(['error' => t('api.invalid_action')]);
 }
 ?>

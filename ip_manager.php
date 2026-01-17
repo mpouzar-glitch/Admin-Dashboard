@@ -3,6 +3,7 @@ require_once 'auth.php';
 checkAuth();
 
 $pdo = getDbConnection();
+$lang = getCurrentLanguage();
 
 // Zpracování akcí
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $ranges = $pdo->query("SELECT * FROM allowed_ip_ranges ORDER BY id DESC")->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Správa IP rozsahů</title>
+    <title><?php echo htmlspecialchars(t('ip_manager.title')); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -99,50 +100,50 @@ $ranges = $pdo->query("SELECT * FROM allowed_ip_ranges ORDER BY id DESC")->fetch
 <body>
     <div class="container">
     <header>
-        <h1><i class="fas fa-network-wired"></i> Správa povolených IP rozsahů</h1>
+        <h1><i class="fas fa-network-wired"></i> <?php echo htmlspecialchars(t('ip_manager.header')); ?></h1>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <a href="user_manager.php" class="btn" style="background: #9b59b6; color: white;">
-                <i class="fas fa-users-cog"></i> Uživatelé
+                <i class="fas fa-users-cog"></i> <?php echo htmlspecialchars(t('nav.users')); ?>
             </a>
             <a href="admin.php" class="btn btn-back">
-                <i class="fas fa-arrow-left"></i> Zpět na dashboard
+                <i class="fas fa-arrow-left"></i> <?php echo htmlspecialchars(t('nav.back_dashboard')); ?>
             </a>
         </div>
     </header>
         
         <div class="current-ip">
-            <strong>Vaše současná IP adresa:</strong> <?php echo htmlspecialchars(getClientIp()); ?>
-            <br><small>Status: <?php echo isIpAllowed(getClientIp()) ? '<span class="status-active">✓ Povolená</span>' : '<span class="status-inactive">✗ Nepovolená</span>'; ?></small>
+            <strong><?php echo htmlspecialchars(t('ip_manager.current_ip')); ?></strong> <?php echo htmlspecialchars(getClientIp()); ?>
+            <br><small><?php echo htmlspecialchars(t('ip_manager.status_label')); ?> <?php echo isIpAllowed(getClientIp()) ? '<span class="status-active">' . htmlspecialchars(t('ip_manager.status_allowed')) . '</span>' : '<span class="status-inactive">' . htmlspecialchars(t('ip_manager.status_denied')) . '</span>'; ?></small>
         </div>
         
         <div class="content-box">
-            <h2>Přidat nový IP rozsah</h2>
+            <h2><?php echo htmlspecialchars(t('ip_manager.add_title')); ?></h2>
             <form method="POST">
                 <input type="hidden" name="action" value="add">
                 <div class="form-group">
-                    <label>IP rozsah (CIDR notace)</label>
+                    <label><?php echo htmlspecialchars(t('ip_manager.range_label')); ?></label>
                     <input type="text" name="ip_range" placeholder="192.168.1.0/24" required>
-                    <small>Příklady: 192.168.1.0/24 (celá podsíť), 10.0.0.5/32 (jedna IP)</small>
+                    <small><?php echo htmlspecialchars(t('ip_manager.range_help')); ?></small>
                 </div>
                 <div class="form-group">
-                    <label>Popis</label>
-                    <input type="text" name="description" placeholder="Lokální síť">
+                    <label><?php echo htmlspecialchars(t('ip_manager.description_label')); ?></label>
+                    <input type="text" name="description" placeholder="<?php echo htmlspecialchars(t('ip_manager.description_placeholder')); ?>">
                 </div>
                 <button type="submit" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Přidat rozsah
+                    <i class="fas fa-plus"></i> <?php echo htmlspecialchars(t('ip_manager.add_range')); ?>
                 </button>
             </form>
         </div>
         
         <div class="content-box">
-            <h2>Povolené IP rozsahy</h2>
+            <h2><?php echo htmlspecialchars(t('ip_manager.list_title')); ?></h2>
             <table>
                 <thead>
                     <tr>
-                        <th>IP rozsah</th>
-                        <th>Popis</th>
-                        <th>Status</th>
-                        <th>Akce</th>
+                        <th><?php echo htmlspecialchars(t('ip_manager.table.range')); ?></th>
+                        <th><?php echo htmlspecialchars(t('ip_manager.table.description')); ?></th>
+                        <th><?php echo htmlspecialchars(t('ip_manager.table.status')); ?></th>
+                        <th><?php echo htmlspecialchars(t('ip_manager.table.actions')); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -152,9 +153,9 @@ $ranges = $pdo->query("SELECT * FROM allowed_ip_ranges ORDER BY id DESC")->fetch
                         <td><?php echo htmlspecialchars($range['description']); ?></td>
                         <td>
                             <?php if ($range['is_active']): ?>
-                                <span class="status-active"><i class="fas fa-check-circle"></i> Aktivní</span>
+                                <span class="status-active"><i class="fas fa-check-circle"></i> <?php echo htmlspecialchars(t('ip_manager.active')); ?></span>
                             <?php else: ?>
-                                <span class="status-inactive"><i class="fas fa-times-circle"></i> Neaktivní</span>
+                                <span class="status-inactive"><i class="fas fa-times-circle"></i> <?php echo htmlspecialchars(t('ip_manager.inactive')); ?></span>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -165,7 +166,7 @@ $ranges = $pdo->query("SELECT * FROM allowed_ip_ranges ORDER BY id DESC")->fetch
                                     <i class="fas fa-toggle-on"></i>
                                 </button>
                             </form>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Opravdu smazat?');">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('<?php echo htmlspecialchars(t('ip_manager.confirm_delete'), ENT_QUOTES); ?>');">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?php echo $range['id']; ?>">
                                 <button type="submit" class="btn btn-small btn-danger">

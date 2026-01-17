@@ -6,13 +6,17 @@ require_once 'config.php';
 $settings = getSettings();
 
 $currentPageId = $_GET['page'] ?? 1;
+$lang = getCurrentLanguage();
+$jsTranslations = getJsTranslations([
+    'dashboard.page_badge',
+]);
 ?>
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title><?php echo htmlspecialchars(t('app.name')); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -278,7 +282,7 @@ $currentPageId = $_GET['page'] ?? 1;
                     <img src="logo.png" width="200"/>
                 </a>
                 <a href="admin.php?page=<?php echo $currentPageId; ?>" class="btn btn-admin">
-                    <i class="fas fa-cog"></i> Správa
+                    <i class="fas fa-cog"></i> <?php echo htmlspecialchars(t('dashboard.admin_button')); ?>
                 </a>
             </div>
             <div class="breadcrumb" id="breadcrumb">
@@ -293,6 +297,7 @@ $currentPageId = $_GET['page'] ?? 1;
     
     <script>
         const currentPageId = <?php echo $currentPageId; ?>;
+        const i18n = <?php echo json_encode($jsTranslations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
         
         // Load breadcrumb
         function loadBreadcrumb() {
@@ -344,7 +349,7 @@ $currentPageId = $_GET['page'] ?? 1;
                             card.className = 'dashboard-card page-link';
                             card.style.backgroundColor = button.background_color;
                             card.innerHTML = `
-                                <span class="page-badge"><i class="fas fa-layer-group"></i> Stránka</span>
+                                <span class="page-badge"><i class="fas fa-layer-group"></i> ${i18n['dashboard.page_badge']}</span>
                                 <i class="fas ${button.icon} card-icon" style="color: ${button.color}"></i>
                                 <div class="card-title">${button.title}</div>
                                 <div class="card-description">${button.description || ''}</div>
