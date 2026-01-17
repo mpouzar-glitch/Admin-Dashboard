@@ -1,1 +1,87 @@
+.MenuBox    {background-color: #000000; visibility: hidden; position: absolute; left: 0; top : 0; z-index: 5; color: #FFFFFF; font-family: verdana; font-size: 11px; font-weight: bold; border: solid 1px #FFFFFF; }
 
+.MenuBox   A {color: #FFFFFF; font-family: verdana; font-size: 11px; font-weight: bold; text-decoration : none; }
+
+.Menu {background-color: #000000; left: 0; top : 0; color: #FFFFFF; font-family: verdana; font-size: 11; font-weight: bold; border: solid 1px black; }
+
+.Menu A {background-color: #000000; left: 0; top : 0; color: #FFFFFF; font-family: verdana; font-size: 11; font-weight: bold; border: solid 1px black; text-decoration : none; }
+
+.GreenBG {BACKGROUND-COLOR: lightgreen}
+
+.RedBG {BACKGROUND-COLOR: tomato}
+
+.KhakiBG { BACKGROUND-COLOR: khaki}
+
+.GreyBG { BACKGROUND-COLOR: #CCCCCC}
+
+.BTN {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: #214060 1px solid;     BORDER-LEFT: #214060 1px solid;     BORDER-RIGHT: #214060 1px solid;     BORDER-TOP: #214060 1px solid;     CURSOR: hand;     FONT-FAMILY: Arial;     FONT-SIZE: 10pt;     HEIGHT: 22px}
+
+.BTNA {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: 1px outset;     BORDER-LEFT: 1px outset;     BORDER-RIGHT: 1px outset;     BORDER-TOP: 1px outset;     CURSOR: hand;     FONT-FAMILY: Arial;     FONT-SIZE: 8pt;     HEIGHT: 22px;     WIDTH: 150px}
+
+.BTNH {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: 1px inset;     BORDER-LEFT: 1px inset;     BORDER-RIGHT: 1px inset;     BORDER-TOP: 1px inset;     CURSOR: hand;     FONT-FAMILY: Arial;     FONT-SIZE: 8pt;     HEIGHT: 22px;     WIDTH: 150px}
+
+.IMG {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: #214060 1px solid;     BORDER-LEFT: #214060 1px solid;     BORDER-RIGHT: #214060 1px solid;     BORDER-TOP: #214060 1px solid;     CURSOR: hand;     FONT-SIZE: 10pt}
+
+.IMGA {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: 1px outset;     BORDER-LEFT: 1px outset;     BORDER-RIGHT: 1px outset;     BORDER-TOP: 1px outset;     CURSOR: hand}
+
+.IMGP {    BORDER-BOTTOM: #ffffff 1px solid;     BORDER-LEFT: #ffffff 1px solid;     BORDER-RIGHT: #ffffff 1px solid;     BORDER-TOP: #ffffff 1px solid}
+
+.IMGH {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: 1px inset;     BORDER-LEFT: 1px inset;     BORDER-RIGHT: 1px inset;     BORDER-TOP: 1px inset;     CURSOR: hand}
+
+.BartoTN {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: #214060 1px solid;     BORDER-LEFT: #214060 1px solid;     BORDER-RIGHT: #214060 1px solid;     BORDER-TOP: #214060 1px solid;     CURSOR: hand}
+
+.BartoTNA {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: 1px outset;     BORDER-LEFT: 1px outset;     BORDER-RIGHT: 1px outset;     BORDER-TOP: 1px outset;     CURSOR: hand;     FONT-SIZE: 8pt}
+
+.BartoTNH {    BACKGROUND-COLOR: #eeeeee;     BORDER-BOTTOM: 1px inset;     BORDER-LEFT: 1px inset;     BORDER-RIGHT: 1px inset;     BORDER-TOP: 1px inset;     CURSOR: hand;     FONT-SIZE: 10pt}
+
+.seznam {    CURSOR: hand}
+
+.small {    FONT-FAMILY: Arial;     FONT-SIZE: 8pt}
+
+.smallBold {    FONT-FAMILY: Arial;     FONT-SIZE: 8pt;     FONT-WEIGHT: bold}
+
+.smallDarkBold {    COLOR: #000000;     FONT-FAMILY: Arial;     FONT-SIZE: 8pt;     FONT-WEIGHT: bold}
+
+.smallRedBold {    COLOR: #ff0000;     FONT-FAMILY: Arial;     FONT-SIZE: 8pt;     FONT-WEIGHT: bold}
+
+.medium {    FONT-FAMILY: Arial;     FONT-SIZE: 10pt}
+
+.mediumBold {    FONT-FAMILY: Arial;     FONT-SIZE: 10pt;     FONT-WEIGHT: bold}
+
+.mediumDarkBold {    COLOR: #000000;     FONT-FAMILY: Arial;     FONT-SIZE: 10pt;     FONT-WEIGHT: bold}
+
+.mediumRedBold {    COLOR: #ff0000;     FONT-FAMILY: Arial;     FONT-SIZE: 10pt;     FONT-WEIGHT: bold}
+
+.mediumDarkBold A {    COLOR: #000000;     FONT-FAMILY: Arial;     FONT-SIZE: 10pt;     FONT-WEIGHT: bold}
+
+.bigDarkBold {    COLOR: #000000;     FONT-FAMILY: Arial;     FONT-SIZE: 12pt;     FONT-WEIGHT: bold}
+
+.tableAdmin {    BACKGROUND-COLOR: #ffffff;     BORDER-BOTTOM: 1px solid;     BORDER-COLLAPSE: collapse;     BORDER-LEFT: 1px solid;     BORDER-RIGHT: 1px solid;     BORDER-TOP: 1px solid;     COLOR: #000000}
+
+.inputText {    BACKGROUND-COLOR: #f5f5f5;     BORDER-BOTTOM: #808080 1px solid;     BORDER-LEFT: #808080 1px solid;     BORDER-RIGHT: #808080 1px solid;     BORDER-TOP: #808080 1px solid;     COLOR: #000000;     HEIGHT: 22px}
+
+.inputNumber {    BACKGROUND-COLOR: #f5f5f5;     BORDER-BOTTOM: #808080 1px solid;     BORDER-LEFT: #808080 1px solid;     BORDER-RIGHT: #808080 1px solid;     BORDER-TOP: #808080 1px solid;     COLOR: #000000;     HEIGHT: 22px;     TEXT-ALIGN: right}
+
+.inputNumberSmall { BACKGROUND-COLOR: #f5f5f5; BORDER: #808080 1px solid;  COLOR: #000000;  height: 16; font-family: verdana;  font-size: 10px;  TEXT-ALIGN: right}
+
+.group {    BORDER-BOTTOM: #eeeeee 1px solid;     BORDER-LEFT: #eeeeee 1px solid;     BORDER-RIGHT: #eeeeee 1px solid;     BORDER-TOP: #eeeeee 1px solid}
+
+.groupLegend {    COLOR: #c0c0c0;     FONT-FAMILY: Arial;     FONT-WEIGHT: bold}
+
+.backSilver {    BACKGROUND-COLOR: #f5f5f5}
+
+.linkTr TD {    BORDER-BOTTOM: #C0C0C0 1px solid;     FONT-FAMILY: Arial;     FONT-SIZE: 8pt}
+
+.linkTr TH {    BORDER-BOTTOM: #C0C0C0 1px solid;     FONT-FAMILY: Arial;     FONT-SIZE: 8pt;     FONT-WEIGHT: bold}
+
+TEXTAREA.inputText {    BACKGROUND-COLOR: #f5f5f5;     BORDER-BOTTOM: #808080 1px solid;     BORDER-LEFT: #808080 1px solid;     BORDER-RIGHT: #808080 1px solid;     BORDER-TOP: #808080 1px solid;     COLOR: #000000;     OVERFLOW: auto}
+
+TABLE.seznam TABLE.seznam {    DISPLAY: none}
+
+BODY {    BACKGROUND-COLOR: #ffffff}
+
+.medium A {    COLOR: black}
+
+.Inquiry {}
+
+.Inquiry TD {    FONT-FAMILY: Arial;     FONT-SIZE: x-small;     FONT-WEIGHT: bold}
