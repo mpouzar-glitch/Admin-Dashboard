@@ -30,6 +30,29 @@ A centralized administration dashboard for managing various administrative tools
 - **Icons**: FontAwesome 6.x
 - **Dependencies**: PDO for database operations
 
+## Screenshots
+
+### Main Dashboard
+![Main dashboard view](docs/main_page.jpg)
+
+### Administration Panel
+![Administration panel](docs/administration.jpg)
+
+### User Management
+![User management](docs/user_management.jpg)
+
+### Allowed IP Addresses
+![Allowed IP address management](docs/allowed_ipaddr.jpg)
+
+### Appearance Settings
+![Appearance settings](docs/apperance_settings.jpg)
+
+### Edit Button Dialog
+![Edit button dialog](docs/edit_button.jpg)
+
+### Subpage View
+![Subpage view](docs/sub_page.jpg)
+
 ## Installation
 
 ### Prerequisites
