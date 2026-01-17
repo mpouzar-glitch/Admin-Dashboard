@@ -35,6 +35,9 @@ A centralized administration dashboard for managing various administrative tools
 ### Main Dashboard
 ![Main dashboard view](docs/main_page.jpg)
 
+### Subpage View
+![Subpage view](docs/sub_page.jpg)
+
 ### Administration Panel
 ![Administration panel](docs/administration.jpg)
 
@@ -49,9 +52,6 @@ A centralized administration dashboard for managing various administrative tools
 
 ### Edit Button Dialog
 ![Edit button dialog](docs/edit_button.jpg)
-
-### Subpage View
-![Subpage view](docs/sub_page.jpg)
 
 ## Installation
 
